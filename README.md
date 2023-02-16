@@ -9,6 +9,9 @@ Esta GitHub Action √© utilizada para fazer atualizar secrets do Helm das aplica√
 ```yaml
 - name: Update ArgoCD application
   uses: betrybe/argocd-app-updater@main
+  with:
+    argocd_token: ${{ secrets.ARGOCD_TOKEN }}
+    env: staging
   env:
     SECRET_MY_ENVVAR: ${{ secrets.MINHA_ENVVAR }}
     SECRET_DATABASE_URL: ${{ secrets.DATABASE_STAGING_URL }}
