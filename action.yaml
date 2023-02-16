@@ -1,0 +1,22 @@
+name: 'ArgoCD Application Updater'
+author: '@betrybe'
+description: 'Esta GitHub Action é utilizada para fazer atualizar secrets do Helm das aplicações em que o deploy é gerenciado pelo ArgoCD da Trybe.'
+inputs:
+  argocd_token:
+    required: false
+    description: 'ArgoCD token to do operations on server'
+    default: ${{ secrets.ARGOCD_TOKEN }}
+  # previewAppRoute:
+  #   required: false
+  #   description: 'Regra de rota para usar em preview apps.'
+  #   default: "$REPOSITORY-preview-app-$VERSION.betrybe.dev"
+
+runs:
+  using: 'composite'
+  steps:
+    - id: job
+      shell: bash
+      run: ${{ github.action_path }}/update_params.sh
+      env:
+        PREVIEW_APP_ROUTE: ${{ inputs.previewAppRoute }}
+        # ARGOCD_TOKEN: ${{ inputs.previewAppRoute }}
