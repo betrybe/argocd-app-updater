@@ -21,5 +21,7 @@ do
   secrets_list="$secrets_list --helm-set secrets.$secret_key=${!data}"
 done
 
-argocd app set $app_name $secrets_list --grpc-web
+if [[ -z "$secrets_list" ]]; then
+  argocd app set $app_name $secrets_list --grpc-web
+fi
 argocd app wait $app_name --grpc-web
