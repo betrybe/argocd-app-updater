@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 
 curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/$ARGOCD_VERSION/argocd-linux-amd64
 sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
@@ -22,4 +22,12 @@ done
 if [[ -z "$secrets_list" ]]; then
   argocd app set $app_name $secrets_list --grpc-web
 fi
+
+echo "======= ArgoCD Updater ======="
+echo ""
+echo "...Aguardando o ArgoCD sincronizar a aplicação"
+echo "Para mais detalhes (logs, debug) sobre o status do deploy acesse https://deploy.betrybe.com"
+echo ""
+echo "======= ArgoCD Updater ======="
+
 argocd app wait $app_name --grpc-web
