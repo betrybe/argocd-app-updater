@@ -22,4 +22,6 @@ runs:
   # image: 'Dockerfile'
       env:
         ARGOCD_AUTH_TOKEN: ${{ inputs.argocd_token }}
+        ARGOCD_SERVER: deploy.betrybe.com:443
+        ARGOCD_VERSION: v2.6.2
         ENVIRONMENT: ${{ inputs.environment }}

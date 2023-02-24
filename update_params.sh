@@ -1,12 +1,10 @@
 #!/bin/bash
 set -ex
 
-VERSION=v2.6.2 # Select desired TAG from https://github.com/argoproj/argo-cd/releases
-curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-linux-amd64
+curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/$ARGOCD_VERSION/argocd-linux-amd64
 sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
 rm argocd-linux-amd64
 
-export ARGOCD_SERVER=deploy.betrybe.com:443
 app_name="$REPOSITORY-$ENVIRONMENT"
 secrets=$1
 
