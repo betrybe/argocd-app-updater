@@ -5,23 +5,21 @@ inputs:
   argocd_token:
     required: true
     description: 'ArgoCD token to do operations on server'
-  env:
+  environment:
     required: true
     description: 'Application environment'
-  secrets:
-    required: false
-    description: 'Secrets passed by param'
-    default: ''
   # previewAppRoute:
   #   required: false
   #   description: 'Regra de rota para usar em preview apps.'
   #   default: "$REPOSITORY-preview-app-$VERSION.betrybe.dev"
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  env:
-    ARGOCD_AUTH_TOKEN: ${{ inputs.argocd_token }}
-    ENVIRONMENT: ${{ inputs.env }}
-  args:
-    - ${{ inputs.secrets }}
+  using: 'composite'
+  steps:
+    - id: run
+      shell: bash
+      run: ${{ github.action_path }}/update_params.sh
+  # image: 'Dockerfile'
+      env:
+        ARGOCD_AUTH_TOKEN: ${{ inputs.argocd_token }}
+        ENVIRONMENT: ${{ inputs.environment }}
