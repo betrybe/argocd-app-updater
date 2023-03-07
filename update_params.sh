@@ -23,6 +23,11 @@ if [[ -z "$secrets_list" ]]; then
   argocd app set $app_name $secrets_list --grpc-web
 fi
 
+if [[ -z "$IMAGE_TAG" ]] && {
+  echo "Updating image to tag: $IMAGE_TAG"
+  argocd app set $app_name --helm-set image.tag=$IMAGE_TAG --grpc-web
+}
+
 echo "======= ArgoCD Updater ======="
 echo ""
 echo "...Aguardando o ArgoCD sincronizar a aplicação"
