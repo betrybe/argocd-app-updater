@@ -19,9 +19,9 @@ runs:
     - id: run
       shell: bash
       run: ${{ github.action_path }}/update_params.sh
-  # image: 'Dockerfile'
       env:
         ARGOCD_AUTH_TOKEN: ${{ inputs.argocd_token }}
         ARGOCD_SERVER: deploy.betrybe.com:443
         ARGOCD_VERSION: v2.6.2
         ENVIRONMENT: ${{ inputs.environment }}
+        IMAGE_TAG: ${{ env.IMAGE_TAG }}
