@@ -8,6 +8,10 @@ inputs:
   environment:
     required: true
     description: 'Application environment'
+  action:
+    required: true
+    description: 'ArgoCD action'
+    default: 'deploy'
   # previewAppRoute:
   #   required: false
   #   description: 'Regra de rota para usar em preview apps.'
@@ -18,10 +22,11 @@ runs:
   steps:
     - id: run
       shell: bash
-      run: ${{ github.action_path }}/update_params.sh
+      run: ${{ github.action_path }}/sync.sh
       env:
         ARGOCD_AUTH_TOKEN: ${{ inputs.argocd_token }}
         ARGOCD_SERVER: deploy.betrybe.com:443
         ARGOCD_VERSION: v2.6.2
         ENVIRONMENT: ${{ inputs.environment }}
+        ACTION: ${{ inputs.action }}
         IMAGE_TAG: ${{ env.IMAGE_TAG }}

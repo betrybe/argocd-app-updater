@@ -32,6 +32,15 @@ if [[ -z "$secrets_list" ]]; then
   echo "::endgroup::"
 fi
 
+# When is rollback, gets the last previous production image and set to the application
+if [[ $ACTION == "rollback" ]]; then
+  lastPreviousPushedImage=$(aws ecr describe-images --repository-name dev-tools \
+    --filter tagStatus=TAGGED \
+    --query "reverse(sort_by(imageDetails[*].{imageTags: imageTags[?starts_with(@, 'production')], imagePushedAt: imagePushedAt}, &imagePushedAt))[1:2].imageTags[0]" \
+    --no-verify-ssl | jq '.[0]' | sed -e "s/\"//g")
+  export IMAGE_TAG=$lastPreviousPushedImage
+fi
+
 if [[ ! -z "$IMAGE_TAG" ]]; then
   echo "::group::Alterando image.tag"
   echo "Updating image to tag: $IMAGE_TAG"
