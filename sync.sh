@@ -49,6 +49,7 @@ if [[ ! -z "$IMAGE_TAG" ]]; then
 fi
 
 echo "::group::Sincronizando"
+argocd app sync $app_name --grpc-web
 argocd app wait $app_name --grpc-web
 echo ""
 echo "Para mais detalhes (logs, debug) sobre o status do deploy acesse https://deploy.betrybe.com"
