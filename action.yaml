@@ -12,6 +12,9 @@ inputs:
     required: true
     description: 'ArgoCD action'
     default: 'deploy'
+  image_tag:
+    description: 'Tag a ser utilizada no app'
+    required: true
   # previewAppRoute:
   #   required: false
   #   description: 'Regra de rota para usar em preview apps.'
@@ -29,4 +32,4 @@ runs:
         ARGOCD_VERSION: v2.6.2
         ENVIRONMENT: ${{ inputs.environment }}
         ACTION: ${{ inputs.action }}
-        IMAGE_TAG: ${{ env.IMAGE_TAG }}
+        DOCKER_IMAGE_TAG: ${{ inputs.image_tag }}

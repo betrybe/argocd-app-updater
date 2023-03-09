@@ -26,7 +26,7 @@ do
   secrets_list="$secrets_list --helm-set secrets.$secret_key=${!data}"
 done
 
-if [[ -z "$secrets_list" ]]; then
+if [[ ! -z "$secrets_list" ]]; then
   echo "::group::Alterando secrets/envvars"
   argocd app set $app_name $secrets_list --grpc-web
   echo "::endgroup::"
@@ -38,18 +38,22 @@ if [[ $ACTION == "rollback" ]]; then
     --filter tagStatus=TAGGED \
     --query "reverse(sort_by(imageDetails[*].{imageTags: imageTags[?starts_with(@, 'production')], imagePushedAt: imagePushedAt}, &imagePushedAt))[1:2].imageTags[0]" \
     --no-verify-ssl | jq '.[0]' | sed -e "s/\"//g")
-  export IMAGE_TAG=$lastPreviousPushedImage
+  export DOCKER_IMAGE_TAG=$lastPreviousPushedImage
 fi
 
-if [[ ! -z "$IMAGE_TAG" ]]; then
+if [[ "$ENVIRONMENT" == "production" ]]; then
+  DOCKER_IMAGE_TAG="production-${GITHUB_SHA:0:9}"
+fi
+
+if [[ ! -z "$DOCKER_IMAGE_TAG" ]]; then
   echo "::group::Alterando image.tag"
-  echo "Updating image to tag: $IMAGE_TAG"
-  argocd app set $app_name --helm-set image.tag=$IMAGE_TAG --grpc-web
+  echo "Updating image to tag: $DOCKER_IMAGE_TAG"
+  argocd app set $app_name --helm-set image.tag=$DOCKER_IMAGE_TAG --grpc-web
   echo "::endgroup::"
 fi
 
 echo "::group::Sincronizando"
-argocd app sync $app_name --grpc-web
+argocd app sync $app_name --grpc-web || true
 argocd app wait $app_name --grpc-web
 echo ""
 echo "Para mais detalhes (logs, debug) sobre o status do deploy acesse https://deploy.betrybe.com"
